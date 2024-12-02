@@ -1,9 +1,10 @@
 import sys
 import ezdxf
 import csv
+import math
 
 try:
-    doc = ezdxf.readfile("diamond.dxf")
+    doc = ezdxf.readfile("Alec_Paras_laser_cut.dxf")
     #print("Success")
 except IOError:
     print(f"Not a DXF file or a generic I/O error.")
@@ -37,3 +38,7 @@ units = doc.header["$INSUNITS"]
 measurment = doc.header["$MEASUREMENT"]
 print(units) #0 = Unitless; 1 = Inches; 2 = Feet; 3 = Miles; 4 = Millimeters; 5 = Centimeters; 6 = Meters; 7 = Kilometers; 8 = Microinches; 9 = Mils; 10 = Yards; 11 = Angstroms; 12 = Nanometers; 13 = Microns; 14 = Decimeters; 15 = Decameters; 16 = Hectometers; 17 = Gigameters; 18 = Astronomical units; 19 = Light years; 20 = Parsecs 
 print(measurment) #0=Impersial, 1=Metric
+
+print(math.ceil(xDimension))
+xDimRounded = math.ceil(xDimension * 1000) / 1000
+print(xDimRounded)
