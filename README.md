@@ -1,2 +1,5 @@
-# dxfReader
-Python script for fetching data from .dxf files header
+# cadFileDimensionReader
+Python scripts for reading dimensions from cad files
+Current filtypes supported:
+- .dxf
+- .stp
