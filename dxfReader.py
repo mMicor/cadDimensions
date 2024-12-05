@@ -1,10 +1,9 @@
 import sys
 import ezdxf
-#import csv
 import math
 
 try:
-    doc = ezdxf.readfile("bridge.dxf")
+    doc = ezdxf.readfile("example.dxf")
     #print("Success")
 except IOError:
     print(f"Not a DXF file or a generic I/O error.")
@@ -23,14 +22,8 @@ print("extMin: ", extMin)
 #print("limMin: ", limMin)
 #print("limMin: ", limMin)
 
-#with open('data.csv', 'w', newline='') as csvfile:
-#    csvWriter = csv.writer(csvfile, delimiter=' ',
-#                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
-#    csvWriter.writerow(extMax)
-#   csvWriter.writerow(doc.header["$EXTMIN"])
-
-xDimension = extMin[0] - extMax[0]
-yDimension = extMin[1] - extMax[1]
+xDimension = extMax[0] - extMin[0]
+yDimension = extMax[1] - extMin[1]
 print("X-Dimension: ", xDimension)
 print("Y-Dimension: ", yDimension)
 
