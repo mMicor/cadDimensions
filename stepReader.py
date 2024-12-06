@@ -3,16 +3,17 @@ from OCC.Core.Bnd import Bnd_Box
 from OCC.Core.BRepBndLib import brepbndlib
 from OCC.Core.IFSelect import IFSelect_ReturnStatus
 from OCC.Core.Interface import Interface_Static
+import math
 
 def extract_units():
     """Extracts the unit system from the STEP file using Interface_Static."""
     length_unit = Interface_Static.CVal("xstep.cascade.unit")
     if "mm" in length_unit.lower():
-        return "millimeters"
+        return "Millimeters"
     elif "m" in length_unit.lower():
-        return "meters"
+        return "Meters"
     elif "in" in length_unit.lower():
-        return "inches"
+        return "Inches"
     else:
         return "Unknown"
 
@@ -52,7 +53,7 @@ def extract_bounding_box_and_units(step_file_path):
 
 # Example usage
 if __name__ == "__main__":
-    step_file = "test.stp"  # Replace with your STEP file path
+    step_file = "example.stp"  # Replace with your STEP file path
     try:
         result = extract_bounding_box_and_units(step_file)
         bbox = result["bounding_box"]
@@ -61,7 +62,21 @@ if __name__ == "__main__":
         print("Bounding Box:")
         print(f"Xmin: {bbox['xmin']}, Xmax: {bbox['xmax']}")
         print(f"Ymin: {bbox['ymin']}, Ymax: {bbox['ymax']}")
-        print(f"Zmin: {bbox['zmin']}, Zmax: {bbox['zmax']}")
+        #print(f"Zmin: {bbox['zmin']}, Zmax: {bbox['zmax']}")
         print(f"Units: {units}")
+
+        xDimension = bbox['xmax'] - bbox['xmin']
+        yDimension = bbox['ymax'] - bbox['ymin']
+        xDimRounded = math.ceil(xDimension * 1000) / 1000
+        yDimRounded = math.ceil(yDimension * 1000) / 1000
+        area = xDimension * yDimension
+        areaRounded = math.ceil(area * 1000) / 1000
+        print("Xtotal: ", xDimension)
+        print("Ytotal: ", yDimension)
+        print("Xrounded: ", xDimRounded)
+        print("Yrounded: ", yDimRounded)
+        print("Area: ", area)
+        print("Area rounded: ", areaRounded)
+
     except Exception as e:
         print(str(e))
