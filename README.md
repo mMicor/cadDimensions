@@ -1,6 +1,6 @@
 # cadFileDimensionReader
 Python scripts for reading dimensions from cad files
-Current filtypes supported:
+Current filetypes supported:
 - .dxf
 - .stp
 - .svg
