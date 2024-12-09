@@ -47,7 +47,7 @@ elif units == 5:
 elif units == 6:
     print("Meters")
 else:
-    print("Unit not supported")
+    print("Unit not supported. Make sure the units of the file is either Inches, Feet, Millimeters, Centimeters or Meters.")
 
 #measurment = doc.header["$MEASUREMENT"]
 #if measurment == 0:
