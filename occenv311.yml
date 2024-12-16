@@ -1,0 +1,14 @@
+name: occenv311
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  conda-forge:
+  	- pythonocc-core=7.8.1=all_hbc2791f_202
+  - pip
+  - pip:
+      - fonttools==4.55.3
+      - numpy-stl==3.2.0
+      - python-utils==3.9.1
+      - typing-extensions==4.12.2
+prefix: /home/mbolkan/.conda/envs/occenv311

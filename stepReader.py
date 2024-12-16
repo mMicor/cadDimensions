@@ -5,25 +5,13 @@ from OCC.Core.IFSelect import IFSelect_ReturnStatus
 from OCC.Core.Interface import Interface_Static
 import math
 
-def extract_units():
-    """Extracts the unit system from the STEP file using Interface_Static."""
-    length_unit = Interface_Static.CVal("xstep.cascade.unit")
-    if "mm" in length_unit.lower():
-        return "Millimeters"
-    elif "m" in length_unit.lower():
-        return "Meters"
-    elif "in" in length_unit.lower():
-        return "Inches"
-    else:
-        return "Unknown"
-
-def extract_bounding_box_and_units(step_file_path):
+def extract_dimensions(cad_file):
     """Extracts the bounding box and units of a STEP file."""
     # Create a STEP reader
     step_reader = STEPControl_Reader()
     
     # Read the STEP file
-    status = step_reader.ReadFile(step_file_path)
+    status = step_reader.ReadFile(cad_file)
     if status != IFSelect_ReturnStatus.IFSelect_RetDone:
         raise ValueError("Error: Failed to read the STEP file.")
     
@@ -36,47 +24,40 @@ def extract_bounding_box_and_units(step_file_path):
     brepbndlib.Add(shape, bbox)
     xmin, ymin, zmin, xmax, ymax, zmax = bbox.Get()
     
-    # Extract units
-    units = extract_units()
+    width = xmax - xmin
+    height = ymax - ymin
+
+    # Extract units and convert to mm if necessary
+    """Extracts the unit system from the STEP file using Interface_Static."""
+    length_unit = Interface_Static.CVal("xstep.cascade.unit")
+    units = length_unit.lower()
+    if "mm" in units:
+        width = math.ceil(width) / 1000
+        height = math.ceil(height) / 1000
+    elif "cm" in units:
+        width = math.ceil(width * 10) / 1000
+        height = math.ceil(height * 10) / 1000
+    elif "m" in units:
+        width = math.ceil(width * 1000) / 1000
+        height = math.ceil(height * 1000) / 1000 
+    elif "in" in units:
+        width = math.ceil(width * 25.4) / 1000
+        height = math.ceil(height * 25.4) / 1000
+    elif "ft" in units:
+        width = math.ceil(width * 304.8) / 1000
+        height = math.ceil(height * 304.8) / 1000
+    elif "yd" in units:
+        width = math.ceil(width * 914.4) / 1000
+        height = math.ceil(height * 914.4) / 1000
+    else:
+        print("Unit not supported. Supported units are: Millimeters, Centimeters, Meters, Inches, Feet or Yards")
+
+
+
+    area = width * height
     
     return {
-        "bounding_box": {
-            "xmin": xmin,
-            "ymin": ymin,
-            "zmin": zmin,
-            "xmax": xmax,
-            "ymax": ymax,
-            "zmax": zmax
-        },
-        "units": units
+        'width': width,
+        'height': height,
+        'area': area
     }
-
-# Example usage
-if __name__ == "__main__":
-    step_file = "example.stp"  # Replace with your STEP file path
-    try:
-        result = extract_bounding_box_and_units(step_file)
-        bbox = result["bounding_box"]
-        units = result["units"]
-        
-        print("Bounding Box:")
-        print(f"Xmin: {bbox['xmin']}, Xmax: {bbox['xmax']}")
-        print(f"Ymin: {bbox['ymin']}, Ymax: {bbox['ymax']}")
-        #print(f"Zmin: {bbox['zmin']}, Zmax: {bbox['zmax']}")
-        print(f"Units: {units}")
-
-        xDimension = bbox['xmax'] - bbox['xmin']
-        yDimension = bbox['ymax'] - bbox['ymin']
-        xDimRounded = math.ceil(xDimension * 1000) / 1000
-        yDimRounded = math.ceil(yDimension * 1000) / 1000
-        area = xDimension * yDimension
-        areaRounded = math.ceil(area * 1000) / 1000
-        print("Xtotal: ", xDimension)
-        print("Ytotal: ", yDimension)
-        print("Xrounded: ", xDimRounded)
-        print("Yrounded: ", yDimRounded)
-        print("Area: ", area)
-        print("Area rounded: ", areaRounded)
-
-    except Exception as e:
-        print(str(e))

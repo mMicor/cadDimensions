@@ -1,0 +1,9 @@
+name: occenv311
+channels:
+  - conda-forge
+  - https://repo.anaconda.com/pkgs/main
+  - https://repo.anaconda.com/pkgs/r
+dependencies:
+  - python=3.11
+  - pythonocc-core=7.8.1
+prefix: /home/mbolkan/.conda/envs/occenv311

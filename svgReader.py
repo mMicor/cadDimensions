@@ -1,15 +1,12 @@
+import math
 import re
 import xml.etree.ElementTree as ET
 
-def get_svg_dimensions_with_units(file_path):
+def extract_dimensions(cad_file):
     try:
         # Parse the SVG file
-        tree = ET.parse(file_path)
+        tree = ET.parse(cad_file)
         root = tree.getroot()
-
-        # Check if it's an SVG file
-        if not root.tag.endswith("svg"):
-            raise ValueError("The file is not a valid SVG.")
 
         # Extract width, height, and viewBox
         width_attr = root.attrib.get("width", "").strip()
@@ -34,27 +31,33 @@ def get_svg_dimensions_with_units(file_path):
             height = height or vb_height
             width_unit = height_unit = "user units"  # Indicate no explicit unit
 
+        if "mm" in width_unit:
+            width = math.ceil(width) / 1000
+            height = math.ceil(height) / 1000
+        elif "cm" in width_unit:
+            width = math.ceil(width * 10) / 1000
+            height = math.ceil(height * 10) / 1000
+        elif "in" in width_unit:
+            width = math.ceil(width * 25.4) / 1000
+            height = math.ceil(height * 25.4) / 1000
+        elif "pt" in width_unit:
+            width = math.ceil(width * 0.352777778) / 1000
+            height = math.ceil(height * 0.352777778) / 1000
+        elif "pc" in width_unit:
+            width = math.ceil(width * 4.23333333) / 1000
+            height = math.ceil(height * 4.23333333) / 1000
+        else:
+            print("Unit not supported. Supported units are: Millimeters, Centimeters, Inches, Points or Picas")
+
+        area = width * height
+        area = math.ceil(area * 1000) / 1000
+
         return {
-            "width": width,
-            "width_unit": width_unit,
-            "height": height,
-            "height_unit": height_unit,
-            "viewBox": viewBox,
+            'width': width,
+            'height': height,
+            'area': area
         }
 
     except Exception as e:
         print(f"Error: {e}")
         return None
-
-# Example usage
-svg_file = "AMY.svg"
-dimensions_with_units = get_svg_dimensions_with_units(svg_file)
-xDimension = dimensions_with_units["width"]
-yDimension = dimensions_with_units["height"]
-unit = dimensions_with_units["width_unit"]
-area = xDimension * yDimension
-
-print("Width: ", xDimension)
-print("Height: ", yDimension)
-print("Unit: ", unit)
-print("Area: ", area)

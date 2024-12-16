@@ -1,7 +1,31 @@
-import re
 import xml.etree.ElementTree as ET
 
-def extract_dimensions_from_path(path_data):
+def extract_dimensions(cad_file):
+    """
+    Extract the dimensions (width and height) of a shape from the path data in an SVG file.
+    
+    Args:
+        file_path (str): Path to the SVG file.
+
+    Returns:
+        tuple: Width and height of the shape.
+    
+    Raises:
+        ValueError: If no valid path data or coordinates are found in the SVG file.
+    """
+    # Parse the SVG file
+    tree = ET.parse(cad_file)
+    root = tree.getroot()
+
+    # Look for the <path> element and extract the 'd' attribute
+    namespace = {'svg': 'http://www.w3.org/2000/svg'}
+    path_element = root.find('.//svg:path', namespace)
+    
+    if path_element is None or 'd' not in path_element.attrib:
+        raise ValueError("No <path> element with a valid 'd' attribute found in the SVG file.")
+    
+    path_data = path_element.attrib['d']
+
     # Split the path data into commands and coordinates
     commands_and_coords = path_data.split()
     
@@ -36,30 +60,10 @@ def extract_dimensions_from_path(path_data):
     # Calculate dimensions
     width = max_x - min_x
     height = max_y - min_y
+    area = width * height
 
-    return width, height
-
-def get_path_data_from_file(file_path):
-    # Parse the SVG file
-    tree = ET.parse(file_path)
-    root = tree.getroot()
-
-    # Look for the <path> element and extract the 'd' attribute
-    namespace = {'svg': 'http://www.w3.org/2000/svg'}
-    path_element = root.find('.//svg:path', namespace)
-    
-    if path_element is None or 'd' not in path_element.attrib:
-        raise ValueError("No <path> element with a valid 'd' attribute found in the SVG file.")
-    
-    return path_element.attrib['d']
-
-# Main execution
-if __name__ == "__main__":
-    file_path = "AMY.svg"  # Replace with your SVG file path
-    try:
-        path_data = get_path_data_from_file(file_path)
-        width, height = extract_dimensions_from_path(path_data)
-        print(f"Width: {width} mm")
-        print(f"Height: {height} mm")
-    except Exception as e:
-        print(f"Error: {e}")
+    return {
+        'width': width,
+        'height': height,
+        'area': area
+    }
