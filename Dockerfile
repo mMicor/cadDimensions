@@ -16,12 +16,6 @@ COPY svgReader2.py /app/svgReader2.py
 # Create Conda environment and activate it
 RUN conda env create -f environment.yml
 RUN conda clean -afy
-RUN conda install -c conda-forge pythonocc-core=7.8.1
-RUN pip install ezdxf
-RUN pip install fonttools==4.55.3
-RUN pip install numpy-stl==3.2.0
-RUN pip install python-utils==3.9.1
-RUN pip install typing-extensions==4.12.2
 
 # Activate the Conda environment
 SHELL ["conda", "run", "-n", "occenv311", "/bin/bash", "-c"]
