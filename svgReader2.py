@@ -1,4 +1,6 @@
 import xml.etree.ElementTree as ET
+import math
+import re
 
 def extract_dimensions(cad_file):
     """
@@ -60,7 +62,42 @@ def extract_dimensions(cad_file):
     # Calculate dimensions
     width = max_x - min_x
     height = max_y - min_y
+
+    width_attr = root.attrib.get("width", "").strip()
+    height_attr = root.attrib.get("height", "").strip()
+
+    def parse_dimension(value):
+        match = re.match(r"([0-9.]+)([a-z%]*)", value)
+        if match:
+            return match.group(2) or "px"  # Default unit is px
+        return None, None
+    
+    wunit = parse_dimension(width_attr)
+    hunit = parse_dimension(height_attr)
+
+    if wunit == hunit:
+        if "mm" in wunit:
+            width = math.ceil(width) / 1000
+            height = math.ceil(height) / 1000
+        elif "cm" in wunit:
+            width = math.ceil(width * 10) / 1000
+            height = math.ceil(height * 10) / 1000
+        elif "in" in wunit:
+            width = math.ceil(width * 25.4) / 1000
+            height = math.ceil(height * 25.4) / 1000
+        elif "pt" in wunit:
+            width = math.ceil(width * 0.352777778) / 1000
+            height = math.ceil(height * 0.352777778) / 1000
+        elif "pc" in wunit:
+            width = math.ceil(width * 4.23333333) / 1000
+            height = math.ceil(height * 4.23333333) / 1000
+        else:
+            print("Unit not supported. Supported units are: Millimeters, Centimeters, Inches, Points or Picas")
+    else:
+        print("Unit mismatch between height and width.")
+
     area = width * height
+    area = math.ceil(area * 1000) / 1000
 
     return {
         'width': width,

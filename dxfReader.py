@@ -29,24 +29,25 @@ def extract_dimensions(cad_file):
     units = doc.header["$INSUNITS"]
     #0 = Unitless; 1 = Inches; 2 = Feet; 3 = Miles; 4 = Millimeters; 5 = Centimeters; 6 = Meters; 7 = Kilometers; 8 = Microinches; 9 = Mils; 10 = Yards; 11 = Angstroms; 12 = Nanometers; 13 = Microns; 14 = Decimeters; 15 = Decameters; 16 = Hectometers; 17 = Gigameters; 18 = Astronomical units; 19 = Light years; 20 = Parsecs
     if units == 1:
-        width = math.ceil(width * 25.4)
-        height = math.ceil(height * 25.4)
+        width = math.ceil(width * 25.4) / 1000
+        height = math.ceil(height * 25.4) / 1000
     elif units == 2:
-        width = math.ceil(width * 304.8)
-        height = math.ceil(height * 304.8)
+        width = math.ceil(width * 304.8) / 1000
+        height = math.ceil(height * 304.8) / 1000
     elif units == 4:
-        width = math.ceil(width)
-        height = math.ceil(height)
+        width = math.ceil(width) / 1000
+        height = math.ceil(height) / 1000
     elif units == 5:
-        width = math.ceil(width * 10)
-        height = math.ceil(height * 10)
+        width = math.ceil(width * 10) / 1000
+        height = math.ceil(height * 10) / 1000
     elif units == 6:
-        width = math.ceil(width * 1000)
-        height = math.ceil(height * 1000)
+        width = math.ceil(width * 1000) / 1000
+        height = math.ceil(height * 1000) / 1000
     else:
         print("Unit not supported. Supported units are: Millimeters, Centimeters, Meters, Inches or Feet.")
 
     area = width * height
+    area = math.ceil(area * 1000) / 1000
 
     return {
         'width': width,

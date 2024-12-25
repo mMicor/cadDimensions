@@ -55,6 +55,7 @@ def extract_dimensions(cad_file):
 
 
     area = width * height
+    area = math.ceil(area * 1000) / 1000
     
     return {
         'width': width,

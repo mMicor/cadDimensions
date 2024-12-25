@@ -13,7 +13,7 @@ SHELL ["conda", "run", "-n", "occenv311", "/bin/bash", "-c"]
 
 # Install dependencies and run cleanup
 RUN conda install -c conda-forge pythonocc-core=7.8.1 -y && \
-    pip install ezdxf requests && \
+    pip install ezdxf numpy-stl && \
     conda clean -afy
 
 # Stage 2: Use a minimal Python image
@@ -24,7 +24,6 @@ ENV LD_LIBRARY_PATH="/usr/local/lib"
 # Copy the necessary libraries from Miniconda environment 
 RUN pip install setuptools --upgrade
 COPY --from=builder /opt/conda/envs/occenv311/lib /usr/local/lib
-#COPY --from=builder /opt/conda/envs/occenv311/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 
 
 # Copy Python scripts
