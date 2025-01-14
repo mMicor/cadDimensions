@@ -19,10 +19,6 @@ RUN conda install -c conda-forge pythonocc-core=7.8.1 -y && \
 # Stage 2: Use a minimal Python image
 FROM python:3.11-slim
 
-# Install gdb and other necessary tools
-RUN apt-get update && apt-get install -y gdb python3-dbg --no-install-recommends && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
 ENV LD_LIBRARY_PATH="/usr/local/lib"
 
 # Copy the necessary libraries from Miniconda environment 
