@@ -22,10 +22,6 @@ def step_dimensions(cad_url):
     data = stepReader.extract_dimensions(cad_file)
     print(data['width'], data['height'], data['area'])
 
-""" def stl_dimensions(cad_file):
-    data = stlReader.extract_dimensions(cad_file)
-    print(data['width'], data['height'], data['area']) """
-
 def svg_dimensions(cad_url):
     local_file_path = "/tmp/file.svg"
     cad_file = download_file(cad_url, local_file_path)

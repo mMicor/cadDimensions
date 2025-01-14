@@ -9,21 +9,25 @@ def extract_dimensions(cad_file):
     """Extracts the bounding box and units of a STEP file."""
     # Create a STEP reader
     step_reader = STEPControl_Reader()
+    print("Creating STEP reader")
     
     # Read the STEP file
     status = step_reader.ReadFile(cad_file)
     if status != IFSelect_ReturnStatus.IFSelect_RetDone:
         raise ValueError("Error: Failed to read the STEP file.")
+    print("Step 2")
     
     # Transfer the shape from the STEP file
     step_reader.TransferRoots()
     shape = step_reader.Shape()
-    
+    print("Step 3")
+
     # Compute the bounding box
     bbox = Bnd_Box()
     brepbndlib.Add(shape, bbox)
     xmin, ymin, zmin, xmax, ymax, zmax = bbox.Get()
-    
+    print("Step 4")
+
     width = xmax - xmin
     height = ymax - ymin
 
@@ -56,7 +60,7 @@ def extract_dimensions(cad_file):
 
     area = width * height
     area = math.ceil(area * 1000) / 1000
-    
+
     return {
         'width': width,
         'height': height,
